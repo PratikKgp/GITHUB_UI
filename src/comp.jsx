@@ -43,151 +43,38 @@ var ABCDEF = [];
 var ABCDE_1 = [];
 var XYZ_1 = [];
 var final_quads = [];
-
+var yo1 = false;
+var yo2 = false;
+var yo3 = false;
 var yo = null;
+var title = "";
 
 const { prefix, prefixes } = Util;
 
 function Greetings(props) {
   const isLoggedIn = props.isLoggedIn;
-  if (isLoggedIn) {
+  if (yo3) {
     return <TreeSelect {...tProps} />;
   } else return null;
 }
 
-function arraysEqual(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-  for (var i = arr1.length; i--; ) {
-    if (arr1[i] !== arr2[i]) return false;
-  }
+// function arraysEqual(arr1, arr2) {
+//   if (arr1.length !== arr2.length) return false;
+//   for (var i = arr1.length; i--; ) {
+//     if (arr1[i] !== arr2[i]) return false;
+//   }
 
-  return true;
+//   return true;
+// }
+
+function onChange(title1) {
+  title = title1;
+  F = title;
+  console.log("onChange ", title, F);
 }
 
-function Displays(props) {
-  const isLoggedIn1 = props.isLoggedIn1;
-  if (isLoggedIn1) {
-    return final_quads.map((person, i) => (
-      <Text>
-        <h3>
-          {final_quads[i][0]}
-          {"  "}--{"  "}
-          {final_quads[i][2]}
-          {"  "}-->{"  "}
-          {final_quads[i][1]}
-          {}
-        </h3>
-      </Text>
-    ));
-  } else return null;
-}
-
-class Counter extends Component {
-  state = {
-    value: [""],
-    title: "",
-    isLoggedIn: false,
-    isLoggedIn1: false
-  };
-
-  App() {
-    {
-      var reader = new FileReader();
-      reader.readAsText(document.getElementById("inputfile").files[0]);
-      reader.onload = function() {
-        parser.parse(reader.result, (error, quad, prefixes) => {
-          if (quad) return store.addQuad(quad);
-          else {
-            K = prefixes;
-            return console.log(
-              "# That's all, folks!",
-              prefixes,
-
-              store,
-              store.size,
-              K
-            );
-          }
-        });
-      };
-    }
-  }
-
-  union_arrays_without_namenode(x, y) {
-    var obj = {};
-    for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-    for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
-    var res = [];
-    for (var k in obj) {
-      if (obj.hasOwnProperty(k))
-        // <-- optional
-        res.push(obj[k]);
-    }
-    return res;
-  }
-
-  arraysEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) return false;
-    for (var i = arr1.length; i--; ) {
-      if (arr1[i] !== arr2[i]) return false;
-    }
-
-    return true;
-  }
-
-  union_arrays_with_namenode(x, y) {
-    var obj = {};
-    for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-    for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
-    var res = [];
-    for (var k in obj) {
-      if (obj.hasOwnProperty(k))
-        // <-- optional
-        res.push(namedNode(obj[k]));
-    }
-    return res;
-  }
-
-  SplitString1(str) {
-    var n = str.indexOf("#");
-    return str.substring(0, n + 1);
-  }
-
-  SplitString2(str) {
-    var n = str.indexOf("#");
-    return str.substring(n + 1);
-  }
-
-  DisplayNamespaces() {
-    var A = store.getSubjects(null, null, null);
-    var B = store.getObjects(null, null, null);
-    var C = store.getPredicates(null, null, null);
-
-    S = this.union_arrays_with_namenode(A, B);
-    // X = this.union_arrays_without_namenode(A, B);
-    Y = this.union_arrays_without_namenode(S, C);
-
-    var u = null;
-    var v = null;
-
-    for (var i = 0; i <= Y.length - 1; i++) {
-      u = this.SplitString1(Y[i]);
-      v = this.SplitString2(Y[i]);
-      L.push(u);
-      M.push(v);
-    }
-    var E = {};
-
-    return console.log(L, M, K, S, C, Y);
-  }
-
-  onChange = title => {
-    this.setState(title);
-    F = title;
-    console.log("onChange ", title, F);
-  };
-
-  PushinTree() {
+function PushinTree() {
+  if (yo2) {
     K = Object.values(K);
 
     for (var i = 0; i <= K.length - 1; i++) {
@@ -222,7 +109,7 @@ class Counter extends Component {
       treeData,
       // value: this.state.value,
       // title: this.state.title,
-      onChange: this.onChange,
+      onChange: onChange,
       treeCheckable: true,
       showCheckedStrategy: SHOW_PARENT,
       searchPlaceholder: "Please select",
@@ -231,10 +118,274 @@ class Counter extends Component {
       }
     };
 
-    this.setState({ isLoggedIn: true });
-
+    // this.setState({ isLoggedIn: true });
+    yo3 = true;
+    // this.PushinTree();
     return console.log(K.length, L.length, K, tProps, Q, W);
+  } else return null;
+}
+
+function DisplayNamespaces() {
+  console.log(yo1);
+  // const isLoggedIn2 = props.isLoggedIn2;
+  if (yo1) {
+    var A = store.getSubjects(null, null, null);
+    var B = store.getObjects(null, null, null);
+    var C = store.getPredicates(null, null, null);
+
+    S = union_arrays_with_namenode(A, B);
+    // X = this.union_arrays_without_namenode(A, B);
+    Y = union_arrays_without_namenode(S, C);
+
+    var u = null;
+    var v = null;
+
+    for (var i = 0; i <= Y.length - 1; i++) {
+      u = SplitString1(Y[i]);
+      v = SplitString2(Y[i]);
+      L.push(u);
+      M.push(v);
+    }
+    var E = {};
+    console.log(L, M, K, S, C, Y, store);
+    yo2 = true;
+    return null;
+  } else return null;
+}
+
+function union_arrays_without_namenode(x, y) {
+  var obj = {};
+  for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
+  for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  var res = [];
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k))
+      // <-- optional
+      res.push(obj[k]);
   }
+  return res;
+}
+
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (var i = arr1.length; i--; ) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+
+  return true;
+}
+
+function union_arrays_with_namenode(x, y) {
+  var obj = {};
+  for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
+  for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  var res = [];
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k))
+      // <-- optional
+      res.push(namedNode(obj[k]));
+  }
+  return res;
+}
+
+function SplitString1(str) {
+  var n = str.indexOf("#");
+  return str.substring(0, n + 1);
+}
+
+function SplitString2(str) {
+  var n = str.indexOf("#");
+  return str.substring(n + 1);
+}
+
+function Displays(props) {
+  const isLoggedIn1 = props.isLoggedIn1;
+  if (isLoggedIn1) {
+    return final_quads.map((person, i) => (
+      <Text>
+        <h3>
+          {final_quads[i][0]}
+          {"  "}--{"  "}
+          {final_quads[i][2]}
+          {"  "}-->{"  "}
+          {final_quads[i][1]}
+          {}
+        </h3>
+      </Text>
+    ));
+  } else return null;
+}
+
+class Counter extends Component {
+  state = {
+    value: [""],
+    // title: "",
+    isLoggedIn: false,
+    isLoggedIn1: false,
+    isLoggedIn2: false
+  };
+
+  App() {
+    var reader = new FileReader();
+    // this.setState({ isLoggedIn2: true });
+
+    reader.readAsText(document.getElementById("inputfile").files[0]);
+
+    reader.onload = function() {
+      parser.parse(reader.result, (error, quad, prefixes) => {
+        if (quad) {
+          return store.addQuad(quad);
+        } else {
+          K = prefixes;
+          return (yo1 = true), console.log(store, yo1);
+          // yo1 = true;
+
+          // this.setState({ isLoggedIn2: true });
+          // return null;
+
+          // return console.log(
+          //   "# That's all, folks!",
+          //   prefixes,
+
+          //   store,
+          //   store.size,
+          //   K
+          // );
+          //  {this.setState({ isLoggedIn2: true });}
+        }
+      });
+    };
+    // yo1 = true;
+    // this.setState({ isLoggedIn2: true });
+    // return this.setState({ isLoggedIn2: true });
+    // this.setState({ isLoggedIn2: true });
+  }
+
+  // union_arrays_without_namenode(x, y) {
+  //   var obj = {};
+  //   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
+  //   for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  //   var res = [];
+  //   for (var k in obj) {
+  //     if (obj.hasOwnProperty(k))
+  //       // <-- optional
+  //       res.push(obj[k]);
+  //   }
+  //   return res;
+  // }
+
+  // arraysEqual(arr1, arr2) {
+  //   if (arr1.length !== arr2.length) return false;
+  //   for (var i = arr1.length; i--; ) {
+  //     if (arr1[i] !== arr2[i]) return false;
+  //   }
+
+  //   return true;
+  // }
+
+  // union_arrays_with_namenode(x, y) {
+  //   var obj = {};
+  //   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
+  //   for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  //   var res = [];
+  //   for (var k in obj) {
+  //     if (obj.hasOwnProperty(k))
+  //       // <-- optional
+  //       res.push(namedNode(obj[k]));
+  //   }
+  //   return res;
+  // }
+
+  // SplitString1(str) {
+  //   var n = str.indexOf("#");
+  //   return str.substring(0, n + 1);
+  // }
+
+  // SplitString2(str) {
+  //   var n = str.indexOf("#");
+  //   return str.substring(n + 1);
+  // }
+
+  // DisplayNamespaces() {
+  //   var A = store.getSubjects(null, null, null);
+  //   var B = store.getObjects(null, null, null);
+  //   var C = store.getPredicates(null, null, null);
+
+  //   S = this.union_arrays_with_namenode(A, B);
+  //   // X = this.union_arrays_without_namenode(A, B);
+  //   Y = this.union_arrays_without_namenode(S, C);
+
+  //   var u = null;
+  //   var v = null;
+
+  //   for (var i = 0; i <= Y.length - 1; i++) {
+  //     u = this.SplitString1(Y[i]);
+  //     v = this.SplitString2(Y[i]);
+  //     L.push(u);
+  //     M.push(v);
+  //   }
+  //   var E = {};
+
+  //   return console.log(L, M, K, S, C, Y);
+  // }
+
+  // onChange = title => {
+  //   this.setState(title);
+  //   F = title;
+  //   console.log("onChange ", title, F);
+  // };
+
+  // PushinTree() {
+  //   if (yo2) {
+  //     K = Object.values(K);
+
+  //     for (var i = 0; i <= K.length - 1; i++) {
+  //       var T = [];
+
+  //       var count = 0;
+  //       for (var j = 0; j <= L.length - 1; j++) {
+  //         if (String(K[i]) == String(L[j])) {
+  //           var V = {
+  //             title: String(M[j]),
+  //             value: "0" + "-" + String(i) + "-" + String(count),
+  //             key: "0" + "-" + String(i) + "-" + String(count)
+  //           };
+  //           Q.push(String(K[i]) + String(M[j]));
+  //           W.push("0" + "-" + String(i) + "-" + String(count));
+
+  //           T.push(V);
+  //           count++;
+  //         }
+  //       }
+  //       var F = {
+  //         title: String(K[i]),
+  //         value: "0" + "-" + String(i),
+  //         key: "0" + "-" + String(i),
+  //         children: T
+  //       };
+
+  //       treeData.push(F);
+  //     }
+
+  //     tProps = {
+  //       treeData,
+  //       // value: this.state.value,
+  //       // title: this.state.title,
+  //       onChange: this.onChange,
+  //       treeCheckable: true,
+  //       showCheckedStrategy: SHOW_PARENT,
+  //       searchPlaceholder: "Please select",
+  //       style: {
+  //         width: "300px"
+  //       }
+  //     };
+
+  //     this.setState({ isLoggedIn: true });
+  //     yo3 = true;
+  //     // this.PushinTree();
+  //     return console.log(K.length, L.length, K, tProps, Q, W);
+  //   } else return null;
+  // }
 
   SelectionDone() {
     for (var i = 0; i <= F.length - 1; i++) {
@@ -319,16 +470,17 @@ class Counter extends Component {
   }
 
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
     const isLoggedIn1 = this.state.isLoggedIn1;
 
     return (
       <div>
         <input type="file" id="inputfile" />
         <Button onClick={() => this.App()}>Upload</Button>
-        <Button onClick={() => this.DisplayNamespaces()}>Upload</Button>
-        <Button onClick={() => this.PushinTree()}>Upload</Button>
-        <Greetings isLoggedIn={isLoggedIn} />
+        <DisplayNamespaces />
+        {/* <Button onClick={() => this.DisplayNamespaces()}>Upload</Button> */}
+        {/* <Button onClick={() => this.PushinTree()}>Upload</Button> */}
+        <PushinTree />
+        <Greetings />
         <Button onClick={() => this.SelectionDone()}>Finished selection</Button>
         <Displays isLoggedIn1={isLoggedIn1} />
       </div>
