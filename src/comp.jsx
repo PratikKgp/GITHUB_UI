@@ -48,12 +48,15 @@ var yo2 = false;
 var yo3 = false;
 var yo = null;
 var title = "";
+var count1 = null;
+var count2 = null;
+var count3 = null;
 
 const { prefix, prefixes } = Util;
 
 function Greetings(props) {
   const isLoggedIn = props.isLoggedIn;
-  if (yo3) {
+  if (isLoggedIn) {
     return <TreeSelect {...tProps} />;
   } else return null;
 }
@@ -74,7 +77,8 @@ function onChange(title1) {
 }
 
 function PushinTree() {
-  if (yo2) {
+  // if (yo2) {
+  if (count1 == null) {
     K = Object.values(K);
 
     for (var i = 0; i <= K.length - 1; i++) {
@@ -117,18 +121,21 @@ function PushinTree() {
         width: "300px"
       }
     };
-
+    count1 = 1;
+    count2 = 1;
     // this.setState({ isLoggedIn: true });
     yo3 = true;
     // this.PushinTree();
     return console.log(K.length, L.length, K, tProps, Q, W);
-  } else return null;
+  }
+  // } else return null;
 }
 
 function DisplayNamespaces() {
-  console.log(yo1);
-  // const isLoggedIn2 = props.isLoggedIn2;
-  if (yo1) {
+  if (count3 == null) {
+    console.log(yo1);
+    // const isLoggedIn2 = props.isLoggedIn2;
+    // if (yo1) {
     var A = store.getSubjects(null, null, null);
     var B = store.getObjects(null, null, null);
     var C = store.getPredicates(null, null, null);
@@ -147,10 +154,12 @@ function DisplayNamespaces() {
       M.push(v);
     }
     var E = {};
+    count3 = 1;
     console.log(L, M, K, S, C, Y, store);
     yo2 = true;
     return null;
-  } else return null;
+  }
+  // } else return null;
 }
 
 function union_arrays_without_namenode(x, y) {
@@ -230,6 +239,7 @@ class Counter extends Component {
     // this.setState({ isLoggedIn2: true });
 
     reader.readAsText(document.getElementById("inputfile").files[0]);
+    // this.setState({ isLoggedIn: true });
 
     reader.onload = function() {
       parser.parse(reader.result, (error, quad, prefixes) => {
@@ -237,10 +247,29 @@ class Counter extends Component {
           return store.addQuad(quad);
         } else {
           K = prefixes;
-          return (yo1 = true), console.log(store, yo1);
+          yo1 = true;
+          console.log(store, yo1);
           // yo1 = true;
 
-          // this.setState({ isLoggedIn2: true });
+          setTimeout(DisplayNamespaces, 10);
+          setTimeout(PushinTree, 10);
+          // setTimeout(Greetings, 20);
+          DisplayNamespaces();
+          PushinTree();
+
+          // isLoggedIn= true
+
+          // Greetings();
+
+          // DisplayNamespaces(function() {
+          //   PushinTree(function() {
+          //     Greetings(function() {
+          //       //All three functions have completed, in order.
+          //     });
+          //   });
+          // });
+
+          // return this.setState({ isLoggedIn: true });
           // return null;
 
           // return console.log(
@@ -253,8 +282,17 @@ class Counter extends Component {
           // );
           //  {this.setState({ isLoggedIn2: true });}
         }
+        // return this.setState({ isLoggedIn: true });
       });
+      // return this.setState({ isLoggedIn: true });
     };
+    // if ((count2 = 1)) {
+    this.setState({ isLoggedIn: true });
+    // const isLoggedIn = this.state.isLoggedIn;
+    return null;
+    // Greetings(isLoggedIn);
+
+    // }
     // yo1 = true;
     // this.setState({ isLoggedIn2: true });
     // return this.setState({ isLoggedIn2: true });
@@ -471,16 +509,18 @@ class Counter extends Component {
 
   render() {
     const isLoggedIn1 = this.state.isLoggedIn1;
+    const isLoggedIn = this.state.isLoggedIn;
 
     return (
       <div>
         <input type="file" id="inputfile" />
         <Button onClick={() => this.App()}>Upload</Button>
-        <DisplayNamespaces />
+        {/* <DisplayNamespaces /> */}
         {/* <Button onClick={() => this.DisplayNamespaces()}>Upload</Button> */}
         {/* <Button onClick={() => this.PushinTree()}>Upload</Button> */}
-        <PushinTree />
-        <Greetings />
+        {/* <PushinTree /> */}
+
+        <Greetings isLoggedIn={isLoggedIn} />
         <Button onClick={() => this.SelectionDone()}>Finished selection</Button>
         <Displays isLoggedIn1={isLoggedIn1} />
       </div>
