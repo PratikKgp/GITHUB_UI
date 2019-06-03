@@ -4,6 +4,7 @@ import Button from "antd/lib/button";
 import TreeSelect from "antd/lib/tree-select";
 import Counter1 from "./comp1";
 import Typography from "antd/lib/typography";
+import { Network, Node, Edge } from "react-vis-network";
 
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
@@ -51,6 +52,12 @@ var title = "";
 var count1 = null;
 var count2 = null;
 var count3 = null;
+var A2 = [];
+var B2 = [];
+var C2 = [];
+var D2 = [];
+
+var yo4 = null;
 
 const { prefix, prefixes } = Util;
 
@@ -175,6 +182,19 @@ function union_arrays_without_namenode(x, y) {
   return res;
 }
 
+function union_arrays(x, y) {
+  var obj = {};
+  for (var i = x.length - 1; i >= 0; --i) obj[x[i]] = x[i];
+  for (var i = y.length - 1; i >= 0; --i) obj[y[i]] = y[i];
+  var res = [];
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k))
+      // <-- optional
+      res.push(obj[k]);
+  }
+  return res;
+}
+
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   for (var i = arr1.length; i--; ) {
@@ -207,21 +227,39 @@ function SplitString2(str) {
   return str.substring(n + 1);
 }
 
+// function Displays(props) {
+//   const isLoggedIn1 = props.isLoggedIn1;
+//   if (isLoggedIn1) {
+//     yo4 = 1;
+
+//     return final_quads.map((person, i) => (
+//       <Text>
+//         <h3>
+//           {final_quads[i][0]}
+//           {"  "}--{"  "}
+//           {final_quads[i][2]}
+//           {"  "}-->{"  "}
+//           {final_quads[i][1]}
+//           {}
+//         </h3>
+//       </Text>
+//     ));
+//   } else return null;
+// }
+
 function Displays(props) {
   const isLoggedIn1 = props.isLoggedIn1;
   if (isLoggedIn1) {
-    return final_quads.map((person, i) => (
-      <Text>
-        <h3>
-          {final_quads[i][0]}
-          {"  "}--{"  "}
-          {final_quads[i][2]}
-          {"  "}-->{"  "}
-          {final_quads[i][1]}
-          {}
-        </h3>
-      </Text>
-    ));
+    return (
+      <Network className="net">
+        {D2.map((person, i) => (
+          <Node id={D2[i]} label={D2[i]} />
+        ))}
+        {C2.map((person, i) => (
+          <Edge id={i} from={A2[i]} to={B2[i]} label={C2[i]} />
+        ))}
+      </Network>
+    );
   } else return null;
 }
 
@@ -253,6 +291,7 @@ class Counter extends Component {
 
           setTimeout(DisplayNamespaces, 10);
           setTimeout(PushinTree, 10);
+
           // setTimeout(Greetings, 20);
           DisplayNamespaces();
           PushinTree();
@@ -488,6 +527,13 @@ class Counter extends Component {
       }
     }
 
+    for (var i = 0; i <= final_quads.length - 1; i++) {
+      A2.push(final_quads[i][0]);
+      B2.push(final_quads[i][1]);
+      C2.push(final_quads[i][2]);
+    }
+    D2 = union_arrays(A2, B2);
+
     this.setState({ isLoggedIn1: true });
 
     return console.log(
@@ -503,7 +549,11 @@ class Counter extends Component {
       store,
       ABCDE_1.length,
       val,
-      final_quads
+      final_quads,
+      A2,
+      B2,
+      C2,
+      D2
     );
   }
 
@@ -523,6 +573,15 @@ class Counter extends Component {
         <Greetings isLoggedIn={isLoggedIn} />
         <Button onClick={() => this.SelectionDone()}>Finished selection</Button>
         <Displays isLoggedIn1={isLoggedIn1} />
+        {/* <Display_nodes isLoggedIn1={isLoggedIn1} /> */}
+        {/* <Network>
+          <Node id="vader" label="Darth Vader" />
+          <Node id="luke" label="Luke Skywalker" />
+          <Node id="leia" label="Leia Organa" />
+          <Edge id="1" from="vader" to="luke" label="yo" />
+
+          <Edge id="2" from="vader" to="leia" />
+        </Network> */}
       </div>
     );
   }
