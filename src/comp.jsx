@@ -1,32 +1,22 @@
 import React, { Component } from "react";
-import Layout from "antd/lib/layout";
 import Button from "antd/lib/button";
 import TreeSelect from "antd/lib/tree-select";
-import Counter1 from "./comp1";
-import Typography from "antd/lib/typography";
 import { Network, Node, Edge } from "react-vis-network";
 
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
-const { Text } = Typography;
-
 const N3 = require("n3");
 const parser = new N3.Parser();
-const { DataFactory, Util } = N3;
-const { namedNode, literal, defaultGraph, quad } = DataFactory;
+const { DataFactory } = N3;
+const { namedNode } = DataFactory;
 var store = new N3.Store();
-var store_1 = new N3.Store();
 
 var K = [];
-var G = [];
-var X = null;
-var Z = null;
 var Y = [];
 var L = [];
 var M = [];
 var treeData = [];
 var tProps = {};
-var T = [];
 var S = [];
 var Q = [];
 var W = [];
@@ -35,31 +25,21 @@ var AB = [];
 var Quads = [];
 var A1 = [];
 var B1 = [];
-var ABC = [];
 var C1 = [];
 var ABCD = [];
 var ABCDE = [];
 var XYZ = [];
-var ABCDEF = [];
 var ABCDE_1 = [];
 var XYZ_1 = [];
 var final_quads = [];
 var yo1 = false;
-var yo2 = false;
-var yo3 = false;
-var yo = null;
 var title = "";
 var count1 = null;
-var count2 = null;
 var count3 = null;
 var A2 = [];
 var B2 = [];
 var C2 = [];
 var D2 = [];
-
-var yo4 = null;
-
-const { prefix, prefixes } = Util;
 
 function Greetings(props) {
   const isLoggedIn = props.isLoggedIn;
@@ -68,15 +48,6 @@ function Greetings(props) {
   } else return null;
 }
 
-// function arraysEqual(arr1, arr2) {
-//   if (arr1.length !== arr2.length) return false;
-//   for (var i = arr1.length; i--; ) {
-//     if (arr1[i] !== arr2[i]) return false;
-//   }
-
-//   return true;
-// }
-
 function onChange(title1) {
   title = title1;
   F = title;
@@ -84,7 +55,6 @@ function onChange(title1) {
 }
 
 function PushinTree() {
-  // if (yo2) {
   if (count1 == null) {
     K = Object.values(K);
 
@@ -93,7 +63,7 @@ function PushinTree() {
 
       var count = 0;
       for (var j = 0; j <= L.length - 1; j++) {
-        if (String(K[i]) == String(L[j])) {
+        if (String(K[i]) === String(L[j])) {
           var V = {
             title: String(M[j]),
             value: "0" + "-" + String(i) + "-" + String(count),
@@ -118,8 +88,7 @@ function PushinTree() {
 
     tProps = {
       treeData,
-      // value: this.state.value,
-      // title: this.state.title,
+
       onChange: onChange,
       treeCheckable: true,
       showCheckedStrategy: SHOW_PARENT,
@@ -129,26 +98,19 @@ function PushinTree() {
       }
     };
     count1 = 1;
-    count2 = 1;
-    // this.setState({ isLoggedIn: true });
-    yo3 = true;
-    // this.PushinTree();
     return console.log(K.length, L.length, K, tProps, Q, W);
   }
-  // } else return null;
 }
 
 function DisplayNamespaces() {
   if (count3 == null) {
     console.log(yo1);
-    // const isLoggedIn2 = props.isLoggedIn2;
-    // if (yo1) {
+
     var A = store.getSubjects(null, null, null);
     var B = store.getObjects(null, null, null);
     var C = store.getPredicates(null, null, null);
 
     S = union_arrays_with_namenode(A, B);
-    // X = this.union_arrays_without_namenode(A, B);
     Y = union_arrays_without_namenode(S, C);
 
     var u = null;
@@ -160,24 +122,19 @@ function DisplayNamespaces() {
       L.push(u);
       M.push(v);
     }
-    var E = {};
     count3 = 1;
     console.log(L, M, K, S, C, Y, store);
-    yo2 = true;
     return null;
   }
-  // } else return null;
 }
 
 function union_arrays_without_namenode(x, y) {
   var obj = {};
   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-  for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  for (var j = y.length - 1; j >= 0; --j) obj[y[j].id] = y[j].id;
   var res = [];
   for (var k in obj) {
-    if (obj.hasOwnProperty(k))
-      // <-- optional
-      res.push(obj[k]);
+    if (obj.hasOwnProperty(k)) res.push(obj[k]);
   }
   return res;
 }
@@ -185,12 +142,10 @@ function union_arrays_without_namenode(x, y) {
 function union_arrays(x, y) {
   var obj = {};
   for (var i = x.length - 1; i >= 0; --i) obj[x[i]] = x[i];
-  for (var i = y.length - 1; i >= 0; --i) obj[y[i]] = y[i];
+  for (var j = y.length - 1; j >= 0; --j) obj[y[j]] = y[j];
   var res = [];
   for (var k in obj) {
-    if (obj.hasOwnProperty(k))
-      // <-- optional
-      res.push(obj[k]);
+    if (obj.hasOwnProperty(k)) res.push(obj[k]);
   }
   return res;
 }
@@ -207,12 +162,10 @@ function arraysEqual(arr1, arr2) {
 function union_arrays_with_namenode(x, y) {
   var obj = {};
   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-  for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
+  for (var j = y.length - 1; j >= 0; --j) obj[y[j].id] = y[j].id;
   var res = [];
   for (var k in obj) {
-    if (obj.hasOwnProperty(k))
-      // <-- optional
-      res.push(namedNode(obj[k]));
+    if (obj.hasOwnProperty(k)) res.push(namedNode(obj[k]));
   }
   return res;
 }
@@ -226,26 +179,6 @@ function SplitString2(str) {
   var n = str.indexOf("#");
   return str.substring(n + 1);
 }
-
-// function Displays(props) {
-//   const isLoggedIn1 = props.isLoggedIn1;
-//   if (isLoggedIn1) {
-//     yo4 = 1;
-
-//     return final_quads.map((person, i) => (
-//       <Text>
-//         <h3>
-//           {final_quads[i][0]}
-//           {"  "}--{"  "}
-//           {final_quads[i][2]}
-//           {"  "}-->{"  "}
-//           {final_quads[i][1]}
-//           {}
-//         </h3>
-//       </Text>
-//     ));
-//   } else return null;
-// }
 
 function Displays(props) {
   const isLoggedIn1 = props.isLoggedIn1;
@@ -274,10 +207,8 @@ class Counter extends Component {
 
   App() {
     var reader = new FileReader();
-    // this.setState({ isLoggedIn2: true });
 
     reader.readAsText(document.getElementById("inputfile").files[0]);
-    // this.setState({ isLoggedIn: true });
 
     reader.onload = function() {
       parser.parse(reader.result, (error, quad, prefixes) => {
@@ -287,186 +218,22 @@ class Counter extends Component {
           K = prefixes;
           yo1 = true;
           console.log(store, yo1);
-          // yo1 = true;
 
           setTimeout(DisplayNamespaces, 10);
           setTimeout(PushinTree, 10);
 
-          // setTimeout(Greetings, 20);
           DisplayNamespaces();
           PushinTree();
-
-          // isLoggedIn= true
-
-          // Greetings();
-
-          // DisplayNamespaces(function() {
-          //   PushinTree(function() {
-          //     Greetings(function() {
-          //       //All three functions have completed, in order.
-          //     });
-          //   });
-          // });
-
-          // return this.setState({ isLoggedIn: true });
-          // return null;
-
-          // return console.log(
-          //   "# That's all, folks!",
-          //   prefixes,
-
-          //   store,
-          //   store.size,
-          //   K
-          // );
-          //  {this.setState({ isLoggedIn2: true });}
         }
-        // return this.setState({ isLoggedIn: true });
       });
-      // return this.setState({ isLoggedIn: true });
     };
-    // if ((count2 = 1)) {
     this.setState({ isLoggedIn: true });
-    // const isLoggedIn = this.state.isLoggedIn;
     return null;
-    // Greetings(isLoggedIn);
-
-    // }
-    // yo1 = true;
-    // this.setState({ isLoggedIn2: true });
-    // return this.setState({ isLoggedIn2: true });
-    // this.setState({ isLoggedIn2: true });
   }
-
-  // union_arrays_without_namenode(x, y) {
-  //   var obj = {};
-  //   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-  //   for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
-  //   var res = [];
-  //   for (var k in obj) {
-  //     if (obj.hasOwnProperty(k))
-  //       // <-- optional
-  //       res.push(obj[k]);
-  //   }
-  //   return res;
-  // }
-
-  // arraysEqual(arr1, arr2) {
-  //   if (arr1.length !== arr2.length) return false;
-  //   for (var i = arr1.length; i--; ) {
-  //     if (arr1[i] !== arr2[i]) return false;
-  //   }
-
-  //   return true;
-  // }
-
-  // union_arrays_with_namenode(x, y) {
-  //   var obj = {};
-  //   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
-  //   for (var i = y.length - 1; i >= 0; --i) obj[y[i].id] = y[i].id;
-  //   var res = [];
-  //   for (var k in obj) {
-  //     if (obj.hasOwnProperty(k))
-  //       // <-- optional
-  //       res.push(namedNode(obj[k]));
-  //   }
-  //   return res;
-  // }
-
-  // SplitString1(str) {
-  //   var n = str.indexOf("#");
-  //   return str.substring(0, n + 1);
-  // }
-
-  // SplitString2(str) {
-  //   var n = str.indexOf("#");
-  //   return str.substring(n + 1);
-  // }
-
-  // DisplayNamespaces() {
-  //   var A = store.getSubjects(null, null, null);
-  //   var B = store.getObjects(null, null, null);
-  //   var C = store.getPredicates(null, null, null);
-
-  //   S = this.union_arrays_with_namenode(A, B);
-  //   // X = this.union_arrays_without_namenode(A, B);
-  //   Y = this.union_arrays_without_namenode(S, C);
-
-  //   var u = null;
-  //   var v = null;
-
-  //   for (var i = 0; i <= Y.length - 1; i++) {
-  //     u = this.SplitString1(Y[i]);
-  //     v = this.SplitString2(Y[i]);
-  //     L.push(u);
-  //     M.push(v);
-  //   }
-  //   var E = {};
-
-  //   return console.log(L, M, K, S, C, Y);
-  // }
-
-  // onChange = title => {
-  //   this.setState(title);
-  //   F = title;
-  //   console.log("onChange ", title, F);
-  // };
-
-  // PushinTree() {
-  //   if (yo2) {
-  //     K = Object.values(K);
-
-  //     for (var i = 0; i <= K.length - 1; i++) {
-  //       var T = [];
-
-  //       var count = 0;
-  //       for (var j = 0; j <= L.length - 1; j++) {
-  //         if (String(K[i]) == String(L[j])) {
-  //           var V = {
-  //             title: String(M[j]),
-  //             value: "0" + "-" + String(i) + "-" + String(count),
-  //             key: "0" + "-" + String(i) + "-" + String(count)
-  //           };
-  //           Q.push(String(K[i]) + String(M[j]));
-  //           W.push("0" + "-" + String(i) + "-" + String(count));
-
-  //           T.push(V);
-  //           count++;
-  //         }
-  //       }
-  //       var F = {
-  //         title: String(K[i]),
-  //         value: "0" + "-" + String(i),
-  //         key: "0" + "-" + String(i),
-  //         children: T
-  //       };
-
-  //       treeData.push(F);
-  //     }
-
-  //     tProps = {
-  //       treeData,
-  //       // value: this.state.value,
-  //       // title: this.state.title,
-  //       onChange: this.onChange,
-  //       treeCheckable: true,
-  //       showCheckedStrategy: SHOW_PARENT,
-  //       searchPlaceholder: "Please select",
-  //       style: {
-  //         width: "300px"
-  //       }
-  //     };
-
-  //     this.setState({ isLoggedIn: true });
-  //     yo3 = true;
-  //     // this.PushinTree();
-  //     return console.log(K.length, L.length, K, tProps, Q, W);
-  //   } else return null;
-  // }
 
   SelectionDone() {
     for (var i = 0; i <= F.length - 1; i++) {
-      if (F[i].length == 3) {
+      if (F[i].length === 3) {
         for (var j = 0; j <= 1000; j++) {
           F.push(F[i] + "-" + String(j));
         }
@@ -512,7 +279,7 @@ class Counter extends Component {
     }
 
     for (var i = 0; i <= ABCDE_1.length - 1; i++) {
-      if (val[i] == 0) {
+      if (val[i] === 0) {
         for (var j = i + 1; j <= ABCDE_1.length - 1; j++) {
           if (arraysEqual(ABCDE_1[i], ABCDE_1[j])) {
             val[j] = 1;
@@ -522,7 +289,7 @@ class Counter extends Component {
     }
 
     for (var i = 0; i <= ABCDE_1.length - 1; i++) {
-      if (val[i] == 0) {
+      if (val[i] === 0) {
         final_quads.push(ABCDE_1[i]);
       }
     }
@@ -565,23 +332,9 @@ class Counter extends Component {
       <div>
         <input type="file" id="inputfile" />
         <Button onClick={() => this.App()}>Upload</Button>
-        {/* <DisplayNamespaces /> */}
-        {/* <Button onClick={() => this.DisplayNamespaces()}>Upload</Button> */}
-        {/* <Button onClick={() => this.PushinTree()}>Upload</Button> */}
-        {/* <PushinTree /> */}
-
         <Greetings isLoggedIn={isLoggedIn} />
         <Button onClick={() => this.SelectionDone()}>Finished selection</Button>
         <Displays isLoggedIn1={isLoggedIn1} />
-        {/* <Display_nodes isLoggedIn1={isLoggedIn1} /> */}
-        {/* <Network>
-          <Node id="vader" label="Darth Vader" />
-          <Node id="luke" label="Luke Skywalker" />
-          <Node id="leia" label="Leia Organa" />
-          <Edge id="1" from="vader" to="luke" label="yo" />
-
-          <Edge id="2" from="vader" to="leia" />
-        </Network> */}
       </div>
     );
   }
