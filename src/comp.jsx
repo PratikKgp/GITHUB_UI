@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import Button from "antd/lib/button";
 import TreeSelect from "antd/lib/tree-select";
 import { Network, Node, Edge } from "react-vis-network";
+import Tree from "antd/lib/tree";
+
+const { TreeNode } = Tree;
 
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
@@ -40,6 +43,36 @@ var A2 = [];
 var B2 = [];
 var C2 = [];
 var D2 = [];
+var data1 = [];
+const x = 3;
+const y = 2;
+const z = 1;
+
+// const generateData = (_level, _preKey, _tns) => {
+//   const preKey = _preKey || "0";
+//   const tns = _tns || gData;
+
+//   const children = [];
+//   for (let i = 0; i < x; i++) {
+//     const key = `${preKey}-${i}`;
+//     tns.push({ title: key, key });
+//     if (i < y) {
+//       children.push(key);
+//     }
+//   }
+//   if (_level < 0) {
+//     return tns;
+//   }
+//   const level = _level - 1;
+//   children.forEach((key, index) => {
+//     tns[index].children = [];
+//     return (
+//       generateData(level, key, tns[index].children),
+//       console.log(level, key, tns[index].children, tns, children)
+//     );
+//   });
+// };
+// generateData(z);
 
 function Greetings(props) {
   const isLoggedIn = props.isLoggedIn;
@@ -202,7 +235,80 @@ class Counter extends Component {
     // title: "",
     isLoggedIn: false,
     isLoggedIn1: false,
-    isLoggedIn2: false
+    isLoggedIn2: false,
+    gData: [],
+    expandedKeys: ["0-0"]
+  };
+
+  onDragEnter = info => {
+    console.log(info);
+    // expandedKeys 需要受控时设置
+    // this.setState({
+    //   expandedKeys: info.expandedKeys,
+    // });
+  };
+
+  onDrop = info => {
+    console.log(info);
+    const dropKey = info.node.props.eventKey;
+    const dragKey = info.dragNode.props.eventKey;
+    const dropPos = info.node.props.pos.split("-");
+    const dropPosition =
+      info.dropPosition - Number(dropPos[dropPos.length - 1]);
+
+    const loop = (data, key, callback) => {
+      data.forEach((item, index, arr) => {
+        if (item.key === key) {
+          return callback(item, index, arr);
+        }
+        if (item.children) {
+          return loop(item.children, key, callback);
+        }
+      });
+    };
+    const data = [...this.state.gData];
+
+    // Find dragObject
+    let dragObj;
+    loop(data, dragKey, (item, index, arr) => {
+      arr.splice(index, 1);
+      dragObj = item;
+    });
+
+    if (!info.dropToGap) {
+      // Drop on the content
+      loop(data, dropKey, item => {
+        item.children = item.children || [];
+        // where to insert 示例添加到尾部，可以是随意位置
+        item.children.push(dragObj);
+      });
+    } else if (
+      (info.node.props.children || []).length > 0 && // Has children
+      info.node.props.expanded && // Is expanded
+      dropPosition === 1 // On the bottom gap
+    ) {
+      loop(data, dropKey, item => {
+        item.children = item.children || [];
+        // where to insert 示例添加到尾部，可以是随意位置
+        item.children.unshift(dragObj);
+      });
+    } else {
+      let ar;
+      let i;
+      loop(data, dropKey, (item, index, arr) => {
+        ar = arr;
+        i = index;
+      });
+      if (dropPosition === -1) {
+        ar.splice(i, 0, dragObj);
+      } else {
+        ar.splice(i + 1, 0, dragObj);
+      }
+    }
+
+    this.setState({
+      gData: data
+    });
   };
 
   App() {
@@ -229,6 +335,57 @@ class Counter extends Component {
     };
     this.setState({ isLoggedIn: true });
     return null;
+  }
+
+  DisplayTree() {
+    var T = [];
+    var count = 0;
+    for (var j = 0; j <= D2.length - 1; j++) {
+      var V = {
+        title: String(D2[j]),
+        value: "0" + "-" + "0" + "-" + String(count),
+        key: "0" + "-" + "0" + "-" + String(count)
+      };
+
+      T.push(V);
+      count++;
+    }
+
+    var F = {
+      title: "root",
+      value: "0" + "-" + "0",
+      key: "0" + "-" + "0",
+      children: T
+    };
+
+    data1.push(F);
+    this.setState({
+      gData: data1
+    });
+
+    // const loop = data =>
+    //   data.map(item => {
+    //     if (item.children && item.children.length) {
+    //       return (
+    //         <TreeNode key={item.key} title={item.title}>
+    //           {loop(item.children)}
+    //         </TreeNode>
+    //       );
+    //     }
+    //     return <TreeNode key={item.key} title={item.title} />;
+    //   });
+
+    return null;
+    // <Tree
+    //   className="draggable-tree"
+    //   defaultExpandedKeys={this.state.expandedKeys}
+    //   draggable
+    //   blockNode
+    //   onDragEnter={this.onDragEnter}
+    //   onDrop={this.onDrop}
+    // >
+    //   {loop(this.state.gData)}
+    // </Tree>
   }
 
   SelectionDone() {
@@ -300,6 +457,28 @@ class Counter extends Component {
       C2.push(final_quads[i][2]);
     }
     D2 = union_arrays(A2, B2);
+    // var T = [];
+    // var count = 0;
+    // for (var j = 0; j <= D2.length - 1; j++) {
+    //   var V = {
+    //     title: String(D2[j]),
+    //     value: "0" + "-" + "0" + "-" + String(count),
+    //     key: "0" + "-" + "0" + "-" + String(count)
+    //   };
+
+    //   T.push(V);
+    //   count++;
+    // }
+
+    // var F = {
+    //   title: "root",
+    //   value: "0" + "-" + "0",
+    //   key: "0" + "-" + "0",
+    //   children: T
+    // };
+
+    // treeData.push(F);
+    // gData = treeData;
 
     this.setState({ isLoggedIn1: true });
 
@@ -328,6 +507,18 @@ class Counter extends Component {
     const isLoggedIn1 = this.state.isLoggedIn1;
     const isLoggedIn = this.state.isLoggedIn;
 
+    const loop = data =>
+      data.map(item => {
+        if (item.children && item.children.length) {
+          return (
+            <TreeNode key={item.key} title={item.title}>
+              {loop(item.children)}
+            </TreeNode>
+          );
+        }
+        return <TreeNode key={item.key} title={item.title} />;
+      });
+
     return (
       <div>
         <input type="file" id="inputfile" />
@@ -335,6 +526,17 @@ class Counter extends Component {
         <Greetings isLoggedIn={isLoggedIn} />
         <Button onClick={() => this.SelectionDone()}>Finished selection</Button>
         <Displays isLoggedIn1={isLoggedIn1} />
+        <Button onClick={() => this.DisplayTree()}>Show Tree</Button>
+        <Tree
+          className="draggable-tree"
+          defaultExpandedKeys={this.state.expandedKeys}
+          draggable
+          blockNode
+          onDragEnter={this.onDragEnter}
+          onDrop={this.onDrop}
+        >
+          {loop(this.state.gData)}
+        </Tree>
       </div>
     );
   }
