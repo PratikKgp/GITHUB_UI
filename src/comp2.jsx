@@ -2,20 +2,29 @@ import React, { Component } from "react";
 import { Network, Node, Edge } from "react-vis-network";
 
 function Displays(props) {
+  //props containing all the selected subj , obj ,pred
   const isLoggedIn1 = props.isLoggedIn1;
-  const A2 = props.A2;
-  const B2 = props.B2;
-  const C2 = props.C2;
-  const D2 = props.D2;
+  const final_subjects = props.final_subjects;
+  const final_objects = props.final_objects;
+  const final_predicates = props.final_predicates;
+  const union_subjects_objects = props.union_subjects_objects;
 
   if (isLoggedIn1) {
     return (
       <Network className="net">
-        {D2.map((person, i) => (
-          <Node id={D2[i]} label={D2[i]} />
+        {union_subjects_objects.map((person, i) => (
+          <Node
+            id={union_subjects_objects[i]}
+            label={union_subjects_objects[i]}
+          />
         ))}
-        {C2.map((person, i) => (
-          <Edge id={i} from={A2[i]} to={B2[i]} label={C2[i]} />
+        {final_predicates.map((person, i) => (
+          <Edge
+            id={i}
+            from={final_subjects[i]}
+            to={final_objects[i]}
+            label={final_predicates[i]}
+          />
         ))}
       </Network>
     );
@@ -26,12 +35,13 @@ class Counter2 extends Component {
   state = {};
   render() {
     return (
+      // Displaying Graph
       <Displays
         isLoggedIn1={this.props.isLoggedIn1}
-        A2={this.props.A2}
-        B2={this.props.B2}
-        C2={this.props.C2}
-        D2={this.props.D2}
+        final_subjects={this.props.final_subjects}
+        final_objects={this.props.final_objects}
+        final_predicates={this.props.final_predicates}
+        union_subjects_objects={this.props.union_subjects_objects}
       />
     );
   }

@@ -28,21 +28,20 @@ const getParentKey = (key, tree) => {
 class Counter3 extends Component {
   state = {
     gData: [],
-    expandedKeys: ["0-0"],
+    expandedKeys: [],
     autoExpandParent: true,
-    searchValue: ""
+    searchValue: "",
+    count12: 1
   };
 
   onExpand = expandedKeys => {
     this.setState({
       expandedKeys
-      // autoExpandParent: false
     });
   };
 
   onDragEnter = info => {
     console.log(info);
-    // expandedKeys 需要受控时设置
     this.setState({
       expandedKeys: info.expandedKeys
     });
@@ -126,33 +125,43 @@ class Counter3 extends Component {
     });
   };
 
+  //Function to display the tree
   DisplayTree() {
-    var T = [];
-    var count = 0;
-    for (var j = 0; j <= this.props.D2.length - 1; j++) {
-      var V = {
-        title: String(this.props.D2[j]),
-        value: "0" + "-" + "0" + "-" + String(count),
-        key: "0" + "-" + "0" + "-" + String(count)
+    if (this.state.count12) {
+      var T = [];
+      var K = [];
+      var count = 0;
+      for (var j = 0; j <= this.props.union_subjects_objects.length - 1; j++) {
+        var V = {
+          title: String(this.props.union_subjects_objects[j]),
+          value: "0" + "-" + "0" + "-" + String(count),
+          key: "0" + "-" + "0" + "-" + String(count)
+        };
+        var W = {
+          key: "0" + "-" + "0" + "-" + String(count),
+          title: String(this.props.union_subjects_objects[j])
+        };
+
+        T.push(V);
+        K.push(W);
+        count++;
+      }
+
+      var F = {
+        title: "root",
+        value: "0" + "-" + "0",
+        key: "0" + "-" + "0",
+        children: T
       };
+      dataList.push(K);
+      data1.push(F);
+      this.setState({
+        gData: data1,
+        count12: 0
+      });
 
-      T.push(V);
-      count++;
+      return console.log(dataList);
     }
-
-    var F = {
-      title: "root",
-      value: "0" + "-" + "0",
-      key: "0" + "-" + "0",
-      children: T
-    };
-
-    data1.push(F);
-    this.setState({
-      gData: data1
-    });
-
-    return null;
   }
   render() {
     const isLoggedIn1 = this.state.isLoggedIn1;
@@ -191,7 +200,7 @@ class Counter3 extends Component {
           placeholder="Search"
           onChange={this.onChange1}
         />
-        <DirectoryTree
+        <Tree
           className="draggable-tree"
           defaultExpandedKeys={this.state.expandedKeys}
           onExpand={this.onExpand}
@@ -203,7 +212,7 @@ class Counter3 extends Component {
           onDrop={this.onDrop}
         >
           {loop(this.state.gData)}
-        </DirectoryTree>
+        </Tree>
       </div>
     );
   }

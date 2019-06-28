@@ -25,14 +25,21 @@ var ABCDE = [];
 var XYZ = [];
 var ABCDE_1 = [];
 var XYZ_1 = [];
+
+//var contining the final selected quads
 var final_quads = [];
 
-var A2 = [];
-var B2 = [];
-var C2 = [];
-var D2 = [];
+//var having the final selected subjects, objects , predicates
+var final_subjects = [];
+var final_objects = [];
+var final_predicates = [];
+
+//var having union of final selected subjects and objects
+var union_subjects_objects = [];
+
 var data1 = [];
 
+//Function to find the Union of two arrays
 function union_arrays(x, y) {
   var obj = {};
   for (var i = x.length - 1; i >= 0; --i) obj[x[i]] = x[i];
@@ -44,6 +51,7 @@ function union_arrays(x, y) {
   return res;
 }
 
+//Function to find if two arrays are identical or not
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   for (var i = arr1.length; i--; ) {
@@ -51,22 +59,6 @@ function arraysEqual(arr1, arr2) {
   }
 
   return true;
-}
-
-function Displays(props) {
-  const isLoggedIn1 = props.isLoggedIn1;
-  if (isLoggedIn1) {
-    return (
-      <Network className="net">
-        {D2.map((person, i) => (
-          <Node id={D2[i]} label={D2[i]} />
-        ))}
-        {C2.map((person, i) => (
-          <Edge id={i} from={A2[i]} to={B2[i]} label={C2[i]} />
-        ))}
-      </Network>
-    );
-  } else return null;
 }
 
 const getParentKey = (key, tree) => {
@@ -102,12 +94,13 @@ class Counter extends Component {
     store: new N3.Store()
   };
 
+  //
   DisplayTree() {
     var T = [];
     var count = 0;
-    for (var j = 0; j <= D2.length - 1; j++) {
+    for (var j = 0; j <= union_subjects_objects.length - 1; j++) {
       var V = {
-        title: String(D2[j]),
+        title: String(union_subjects_objects[j]),
         value: "0" + "-" + "0" + "-" + String(count),
         key: "0" + "-" + "0" + "-" + String(count)
       };
@@ -195,11 +188,11 @@ class Counter extends Component {
     }
 
     for (var i = 0; i <= final_quads.length - 1; i++) {
-      A2.push(final_quads[i][0]);
-      B2.push(final_quads[i][1]);
-      C2.push(final_quads[i][2]);
+      final_subjects.push(final_quads[i][0]);
+      final_objects.push(final_quads[i][1]);
+      final_predicates.push(final_quads[i][2]);
     }
-    D2 = union_arrays(A2, B2);
+    union_subjects_objects = union_arrays(final_subjects, final_objects);
 
     this.setState({ isLoggedIn1: true });
 
@@ -219,10 +212,10 @@ class Counter extends Component {
       ABCDE_1.length,
       val,
       final_quads,
-      A2,
-      B2,
-      C2,
-      D2
+      final_subjects,
+      final_objects,
+      final_predicates,
+      union_subjects_objects
     );
   }
   Onchange_tProps = (new1, new2, new3, new4, new5) => {
@@ -272,8 +265,14 @@ class Counter extends Component {
 
         <Button onClick={() => this.SelectionDone()}>Display Graph</Button>
 
-        <Counter2 isLoggedIn1={isLoggedIn1} A2={A2} B2={B2} C2={C2} D2={D2} />
-        <Counter3 D2={D2} />
+        <Counter2
+          isLoggedIn1={isLoggedIn1}
+          final_subjects={final_subjects}
+          final_objects={final_objects}
+          final_predicates={final_predicates}
+          union_subjects_objects={union_subjects_objects}
+        />
+        <Counter3 union_subjects_objects={union_subjects_objects} />
       </div>
     );
   }

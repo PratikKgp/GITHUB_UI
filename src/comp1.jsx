@@ -1,17 +1,11 @@
 import React, { Component } from "react";
 import Button from "antd/lib/button";
 import TreeSelect from "antd/lib/tree-select";
-import { Network, Node, Edge } from "react-vis-network";
 import Tree from "antd/lib/tree";
 import Input from "antd/lib/input";
-// import Counter1 from "./comp1";
-
-const { TreeNode, DirectoryTree } = Tree;
-const Search = Input.Search;
 
 const SHOW_PARENT = TreeSelect.SHOW_PARENT;
-var K = [];
-var yo1 = null;
+var Prefixes_array = [];
 const N3 = require("n3");
 const parser = new N3.Parser();
 const { DataFactory } = N3;
@@ -29,18 +23,18 @@ var F = [];
 
 var treeData = [];
 var tProps = {};
+var verify = 0;
 
-// var T=[]
 var count1 = null;
-// const SHOW_PARENT = TreeSelect.SHOW_PARENT;
 
 function DisplayNamespaces() {
   if (count3 == null) {
-    console.log(yo1);
-
+    //getting arrays of all the subjects, objects , predicates in the data
     var A = store.getSubjects(null, null, null);
     var B = store.getObjects(null, null, null);
     var C = store.getPredicates(null, null, null);
+
+    //Union of subjects, objects and predicates
 
     S = union_arrays_with_namenode(A, B);
     Y = union_arrays_without_namenode(S, C);
@@ -50,12 +44,15 @@ function DisplayNamespaces() {
 
     for (var i = 0; i <= Y.length - 1; i++) {
       u = SplitString1(Y[i]);
+      // contains the part of subject/object before #
       v = SplitString2(Y[i]);
+      //contains the part of subject/object after #
+
       L.push(u);
       M.push(v);
     }
     count3 = 1;
-    console.log(L, M, K, S, C, Y, store);
+    console.log(L, M, Prefixes_array, C, Y, store);
     return null;
   }
 }
@@ -77,16 +74,19 @@ function union_arrays_with_namenode(x, y) {
   return res;
 }
 
+// function that outputs the part of subject/object before #
 function SplitString1(str) {
   var n = str.indexOf("#");
   return str.substring(0, n + 1);
 }
 
+// function that outputs the part of subject/object after #
 function SplitString2(str) {
   var n = str.indexOf("#");
   return str.substring(n + 1);
 }
 
+//function to find union of arrays
 function union_arrays_without_namenode(x, y) {
   var obj = {};
   for (var i = x.length - 1; i >= 0; --i) obj[x[i].id] = x[i].id;
@@ -98,33 +98,23 @@ function union_arrays_without_namenode(x, y) {
   return res;
 }
 
-function union_arrays(x, y) {
-  var obj = {};
-  for (var i = x.length - 1; i >= 0; --i) obj[x[i]] = x[i];
-  for (var j = y.length - 1; j >= 0; --j) obj[y[j]] = y[j];
-  var res = [];
-  for (var k in obj) {
-    if (obj.hasOwnProperty(k)) res.push(obj[k]);
-  }
-  return res;
-}
-
+//function to get treeData and tProps
 function PushinTree() {
   if (count1 == null) {
-    K = Object.values(K);
+    Prefixes_array = Object.values(Prefixes_array);
 
-    for (var i = 0; i <= K.length - 1; i++) {
+    for (var i = 0; i <= Prefixes_array.length - 1; i++) {
       var T = [];
 
       var count = 0;
       for (var j = 0; j <= L.length - 1; j++) {
-        if (String(K[i]) === String(L[j])) {
+        if (String(Prefixes_array[i]) === String(L[j])) {
           var V = {
             title: String(M[j]),
             value: "0" + "-" + String(i) + "-" + String(count),
             key: "0" + "-" + String(i) + "-" + String(count)
           };
-          Q.push(String(K[i]) + String(M[j]));
+          Q.push(String(Prefixes_array[i]) + String(M[j]));
           W.push("0" + "-" + String(i) + "-" + String(count));
 
           T.push(V);
@@ -132,7 +122,7 @@ function PushinTree() {
         }
       }
       var F = {
-        title: String(K[i]),
+        title: String(Prefixes_array[i]),
         value: "0" + "-" + String(i),
         key: "0" + "-" + String(i),
         children: T
@@ -143,7 +133,6 @@ function PushinTree() {
 
     tProps = {
       treeData,
-
       onChange: onChange,
       treeCheckable: true,
       showCheckedStrategy: SHOW_PARENT,
@@ -153,10 +142,19 @@ function PushinTree() {
       }
     };
     count1 = 1;
-    return console.log(K.length, L.length, K, tProps, Q, W);
+
+    return console.log(
+      Prefixes_array.length,
+      L.length,
+      Prefixes_array,
+      tProps,
+      Q,
+      W
+    );
   }
 }
 
+//function to display the tree
 function Greetings(props) {
   const isLoggedIn = props.isLoggedIn;
   if (isLoggedIn) {
@@ -174,43 +172,37 @@ class Counter1 extends Component {
     isLoggedIn: false
   };
 
-  // onChange12() {
-
-  //   this.props.update_Props;
-  // }
-
+  //Function to process the data
   App() {
     var reader = new FileReader();
 
     reader.readAsText(document.getElementById("inputfile").files[0]);
-
+    //Parsing the file
     reader.onload = function() {
       parser.parse(reader.result, (error, quad, prefixes) => {
         if (quad) {
+          //storing the quad
           return store.addQuad(quad);
         } else {
-          K = prefixes;
-          yo1 = true;
-          console.log(store, yo1);
+          Prefixes_array = prefixes;
 
           setTimeout(DisplayNamespaces, 10);
           setTimeout(PushinTree, 10);
 
           DisplayNamespaces();
+
           PushinTree();
         }
       });
     };
     console.log(tProps, store);
-    // this.props.tProps = tProps;
-    // this.props.update_Props(tProps, Q, F, W, store);
 
     this.setState({ isLoggedIn: true });
     return null;
   }
 
+  //Updating props after selection is finished
   component() {
-    // console.log(tProps);
     this.props.update_Props(tProps, Q, F, W, store);
   }
 
@@ -219,12 +211,20 @@ class Counter1 extends Component {
 
     return (
       <div>
-        <Button onClick={() => this.App()}>Upload</Button>
+        <Button
+          onClick={() => {
+            this.App();
+            // this.App();
+          }}
+        >
+          Upload
+        </Button>
+
+        {/* Displaying tree */}
         <Greetings isLoggedIn={isLoggedIn} />
+
+        {/* Updating props  */}
         <Button onClick={() => this.component()}>Finished Selection</Button>
-        {/* {this.Update} */}
-        {/* {this.props.update_Props(tProps, Q, F, W, store)} */}
-        {/* {this.props.tProps = tProps} */}
       </div>
     );
   }
